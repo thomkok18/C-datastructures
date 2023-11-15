@@ -216,18 +216,18 @@ int list_unlink_node(struct list *l, struct node *n) {
     if (l == NULL || n == NULL) return 1;
     if (l->length == 0 || l != n->list) return 1;
 
-    struct node *prevnode = n->prev;
-    struct node *nextnode = n->next;
+    struct node *prev_node = n->prev;
+    struct node *next_node = n->next;
 
-    if (prevnode != NULL && nextnode != NULL) {
-        prevnode->next = n->next;
-        nextnode->prev = n->prev;
-    } else if (prevnode != NULL) {
-        prevnode->next = n->next;
-        l->tail = prevnode;
-    } else if (nextnode != NULL) {
-        nextnode->prev = n->prev;
-        l->head = nextnode;
+    if (prev_node != NULL && next_node != NULL) {
+        prev_node->next = n->next;
+        next_node->prev = n->prev;
+    } else if (prev_node != NULL) {
+        prev_node->next = n->next;
+        l->tail = prev_node;
+    } else if (next_node != NULL) {
+        next_node->prev = n->prev;
+        l->head = next_node;
     } else {
         l->head = NULL;
         l->tail = NULL;
@@ -248,7 +248,6 @@ int list_unlink_node(struct list *l, struct node *n) {
  * @param n the node.
  */
 void list_free_node(struct node *n) {
-    if (n == NULL) return;
     if (n != NULL) free(n);
 }
 
@@ -309,12 +308,12 @@ int list_insert_after(struct list *l, struct node *n, struct node *m) {
     if (l == NULL || n == NULL || m == NULL) return 1;
     if (l->length == 0 || l != m->list || l == n->list) return 1;
 
-    struct node *nextnode = m->next;
+    struct node *next_node = m->next;
 
-    if (nextnode != NULL) {
-        nextnode->prev = n;
+    if (next_node != NULL) {
+        next_node->prev = n;
 
-        n->next = nextnode;
+        n->next = next_node;
         n->prev = m;
 
         m->next = n;
@@ -348,12 +347,12 @@ int list_insert_before(struct list *l, struct node *n, struct node *m) {
     if (l == NULL || n == NULL || m == NULL) return 1;
     if (l->length == 0 || l != m->list || l == n->list) return 1;
 
-    struct node *prevnode = m->prev;
+    struct node *prev_node = m->prev;
 
-    if (prevnode != NULL) {
-        prevnode->next = n;
+    if (prev_node != NULL) {
+        prev_node->next = n;
 
-        n->prev = prevnode;
+        n->prev = prev_node;
         n->next = m;
 
         m->prev = n;
@@ -430,37 +429,37 @@ struct list *list_cut_after(struct list *l, struct node *n) {
 
     nodes[0] = l->head;
 
-    size_t nodeposition;
+    size_t node_position;
 
     // Get all nodes from list.
     for (size_t i = 1; i < l->length; i++) {
         nodes[i] = nodes[i - 1]->next;
 
-        if (nodes[i] == n) nodeposition = i + 1;
+        if (nodes[i] == n) node_position = i + 1;
     }
 
-    struct list *newlist = list_init();
+    struct list *new_list = list_init();
 
-    size_t newlistlength = 0;
-    newlist->head = n->next;
+    size_t new_list_length = 0;
+    new_list->head = n->next;
 
     l->tail = n;
     n->next = NULL;
 
     // Move nodes from first list to the new list.
-    for (size_t i = nodeposition; i < l->length; i++) {
-        nodes[i]->list = newlist;
+    for (size_t i = node_position; i < l->length; i++) {
+        nodes[i]->list = new_list;
 
-        newlistlength++;
+        new_list_length++;
 
         // Set tail and determine the lengths of both lists.
         if (i == l->length - 1) {
-            newlist->tail = nodes[i];
-            newlist->length = newlistlength;
+            new_list->tail = nodes[i];
+            new_list->length = new_list_length;
 
-            l->length = l->length - newlistlength;
+            l->length = l->length - new_list_length;
         }
     }
 
-    return newlist;
+    return new_list;
 }
