@@ -62,7 +62,7 @@ void list_free_node(struct node *n);
 int list_cleanup(struct list *l);
 
 /* Returns 1 if node N is present in list L and 0 if N is not present
- * in L. Returns -1 if an error occured. */
+ * in L. Returns -1 if an error occurred. */
 int list_node_present(const struct list *l, const struct node *n);
 
 /* Inserts node N after node M in list L.
@@ -84,7 +84,7 @@ struct node *list_get_ith(const struct list *l, size_t i);
 
 /* Cuts list L into 2 lists, with node N being the last node in the first half
  * and all nodes after nodes N are part to the second half, in the same
- * order they were in in the original list.  Modifies list L to only contain
+ * order they were in the original list. Modifies list L to only contain
  * the first half and creates a new list for the second half. Returns a
  * pointer to the second half if successfully cut and NULL otherwise. */
 struct list *list_cut_after(struct list *l, struct node *n);
