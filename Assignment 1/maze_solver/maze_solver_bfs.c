@@ -21,7 +21,7 @@ typedef struct queue {
     int *data;
     int pushes;
     int pops;
-    int firstInLine;
+    int first_in_line;
     int length;
     int capacity;
 } queue;
@@ -39,11 +39,11 @@ int bfs_solve(struct maze *m) {
 
     struct queue *path = queue_init(QUEUE_SIZE);
 
-    int locRow = maze_row(m, m->start_index);
-    int locCol = maze_col(m, m->start_index);
+    int loc_row = maze_row(m, m->start_index);
+    int loc_col = maze_col(m, m->start_index);
 
-    maze_set(m, locRow, locCol, VISITED);
-    queue_push(path, maze_index(m, locRow, locCol));
+    maze_set(m, loc_row, loc_col, VISITED);
+    queue_push(path, maze_index(m, loc_row, loc_col));
     path->length++;
 
     int row_offsets[] = {-1, 1, 0, 0};
@@ -51,33 +51,33 @@ int bfs_solve(struct maze *m) {
 
     char direction[4];
     int choices = 0;
-    int pathLength;
+    int path_length;
 
     for (int i = 0; i < QUEUE_SIZE; i++) {
         // Looking around for possible directions and the destination.
         for (int d = 0; d < N_MOVES; d++) {
-            int newRow = locRow + row_offsets[d];
-            int newCol = locCol + col_offsets[d];
+            int new_row = loc_row + row_offsets[d];
+            int new_col = loc_col + col_offsets[d];
 
-            direction[d] = maze_get(m, newRow, newCol);
+            direction[d] = maze_get(m, new_row, new_col);
 
-            if (maze_at_destination(m, newRow, newCol)) {
-                pathLength = path->length;
+            if (maze_at_destination(m, new_row, new_col)) {
+                path_length = path->length;
 
                 for (int p = 0; p < path->length; p++) {
                     if (queue_empty(path)) break;
 
-                    locRow = maze_row(m, path->data[p]);
-                    locCol = maze_col(m, path->data[p]);
+                    loc_row = maze_row(m, path->data[p]);
+                    loc_col = maze_col(m, path->data[p]);
 
                     path->data[p] = PATH;
 
-                    maze_set(m, locRow, locCol, PATH);
+                    maze_set(m, loc_row, loc_col, PATH);
                 }
 
                 queue_cleanup(path);
 
-                return pathLength;
+                return path_length;
             }
 
             if (direction[d] == FLOOR) choices++;
@@ -86,13 +86,13 @@ int bfs_solve(struct maze *m) {
         // If there are multiple FLOOR choices to go to, add TO_VISIT.
         if (choices > 1) {
             for (int d = 0; d < N_MOVES; d++) {
-                int newRow = locRow + row_offsets[d];
-                int newCol = locCol + col_offsets[d];
+                int new_row = loc_row + row_offsets[d];
+                int new_col = loc_col + col_offsets[d];
 
-                direction[d] = maze_get(m, newRow, newCol);
+                direction[d] = maze_get(m, new_row, new_col);
 
                 if (direction[d] == FLOOR) {
-                    maze_set(m, newRow, newCol, TO_VISIT);
+                    maze_set(m, new_row, new_col, TO_VISIT);
                 }
             }
         }
@@ -100,52 +100,52 @@ int bfs_solve(struct maze *m) {
         // If FLOOR or TO_VISIT move to it.
         for (int d = 0; d < N_MOVES; d++) {
             if (direction[d] == FLOOR || direction[d] == TO_VISIT) {
-                int newRow = locRow + row_offsets[d];
-                int newCol = locCol + col_offsets[d];
+                int new_row = loc_row + row_offsets[d];
+                int new_col = loc_col + col_offsets[d];
 
-                maze_set(m, newRow, newCol, VISITED);
+                maze_set(m, new_row, new_col, VISITED);
 
-                locRow = newRow;
-                locCol = newCol;
+                loc_row = new_row;
+                loc_col = new_col;
 
-                queue_push(path, maze_index(m, newRow, newCol));
+                queue_push(path, maze_index(m, new_row, new_col));
 
-                goto findNewDirection;
+                goto find_new_direction;
             }
         }
 
         // Reached dead end. Time to backtrack and look around for junction.
         for (int p = 0; p < path->length; p++) {
-            int previousRow = maze_row(m, path->data[path->length]);
-            int previousCol = maze_col(m, path->data[path->length]);
+            int previous_row = maze_row(m, path->data[path->length]);
+            int previous_col = maze_col(m, path->data[path->length]);
 
             for (int d = 0; d < N_MOVES; d++) {
-                int newRow = locRow + row_offsets[d];
-                int newCol = locCol + col_offsets[d];
+                int new_row = loc_row + row_offsets[d];
+                int new_col = loc_col + col_offsets[d];
 
-                direction[d] = maze_get(m, newRow, newCol);
+                direction[d] = maze_get(m, new_row, new_col);
 
                 if (direction[d] == TO_VISIT) {
-                    queue_push(path, maze_index(m, previousRow, previousCol));
+                    queue_push(path, maze_index(m, previous_row, previous_col));
 
-                    maze_set(m, newRow, newCol, VISITED);
+                    maze_set(m, new_row, new_col, VISITED);
 
-                    locRow = newRow;
-                    locCol = newCol;
+                    loc_row = new_row;
+                    loc_col = new_col;
 
-                    queue_push(path, maze_index(m, locRow, locCol));
+                    queue_push(path, maze_index(m, loc_row, loc_col));
 
-                    goto findNewDirection;
+                    goto find_new_direction;
                 }
             }
 
             queue_pop(path);
 
-            locRow = maze_row(m, path->data[path->length]);
-            locCol = maze_col(m, path->data[path->length]);
+            loc_row = maze_row(m, path->data[path->length]);
+            loc_col = maze_col(m, path->data[path->length]);
         }
 
-        findNewDirection: continue;
+        find_new_direction: continue;
     }
 
     queue_cleanup(path);

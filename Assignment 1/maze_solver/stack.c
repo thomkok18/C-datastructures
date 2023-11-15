@@ -21,26 +21,22 @@ struct stack *stack_init(size_t capacity) {
 
     struct stack *st = malloc(sizeof(struct stack));
 
-    if (st == NULL) {
-        //fprintf(stderr,"Not enough space for stack.\n");
-        return NULL;
-    }
+    if (st == NULL) return NULL;
 
     st->data = malloc(sizeof(int) * capacity);
 
     if (st->data == NULL) {
         stack_cleanup(st);
 
-        //fprintf(stderr,"Not enough space for data or size.\n");
         return NULL;
-    } else {
-        st->pushes = 0;
-        st->pops = 0;
-        st->size = 0;
-        st->capacity = capacity;
-
-        return st;
     }
+
+    st->pushes = 0;
+    st->pops = 0;
+    st->size = 0;
+    st->capacity = capacity;
+
+    return st;
 }
 
 /**
@@ -50,8 +46,10 @@ struct stack *stack_init(size_t capacity) {
  */
 void stack_cleanup(struct stack *s) {
     if(s == NULL) return;
+
     if(s->data != NULL) free(s->data);
-    if(s != NULL) free(s);
+
+    free(s);
 }
 
 /**
@@ -79,15 +77,10 @@ int stack_push(struct stack *s, int c) {
     if ((s->size + 1) >= s->capacity) {
         int *temp = realloc(s->data, sizeof(int) * ((s->size + 1) * 2));
 
-        if (temp == NULL) {
-            //fprintf(stderr,"Memory Re-allocation failed. Unable to add value to stack.\n");
-            return 0;
-        } else {
-            s->capacity = (s->size + 1) * 2;
-            s->data = temp;
+        if (temp == NULL) return 0;
 
-            //fprintf(stderr,"Memory successfully re-allocated for push.\n");
-        }
+        s->capacity = (s->size + 1) * 2;
+        s->data = temp;
     }
 
     s->data[s->size] = c;
@@ -107,17 +100,14 @@ int stack_push(struct stack *s, int c) {
 int stack_pop(struct stack *s) {
     if (s == NULL) return -1;
 
-    if (s->size == 0) {
-        //fprintf(stderr,"Stack is already empty.\n");
-        return -1;
-    } else {
-        s->data[s->size] = '\0';
+    if (s->size == 0) return -1;
 
-        s->size--;
-        s->pops++;
+    s->data[s->size] = '\0';
 
-        return s->data[s->size];
-    }
+    s->size--;
+    s->pops++;
+
+    return s->data[s->size];
 }
 
 /**

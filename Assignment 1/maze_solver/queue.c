@@ -7,7 +7,7 @@ struct queue {
     int *data;
     int pushes;
     int pops;
-    size_t firstInLine;
+    size_t first_in_line;
     size_t length;
     size_t capacity;
 };
@@ -22,27 +22,23 @@ struct queue *queue_init(size_t capacity) {
 
     struct queue *qu = malloc(sizeof(struct queue));
 
-    if (qu == NULL) {
-        //fprintf(stderr,"Not enough space for stack.\n");
-        return NULL;
-    }
+    if (qu == NULL) return NULL;
 
     qu->data = malloc(sizeof(int) * capacity);
 
     if (qu->data == NULL) {
         queue_cleanup(qu);
 
-        //fprintf(stderr,"Not enough space for data or size.\n");
         return NULL;
-    } else {
-        qu->pushes = 0;
-        qu->pops = 0;
-        qu->firstInLine = 0;
-        qu->length = 0;
-        qu->capacity = capacity;
-
-        return qu;
     }
+
+    qu->pushes = 0;
+    qu->pops = 0;
+    qu->first_in_line = 0;
+    qu->length = 0;
+    qu->capacity = capacity;
+
+    return qu;
 }
 
 /**
@@ -52,8 +48,10 @@ struct queue *queue_init(size_t capacity) {
  */
 void queue_cleanup(struct queue *q) {
     if(q == NULL) return;
+
     if(q->data != NULL) free(q->data);
-    if(q != NULL) free(q);
+
+    free(q);
 }
 
 /**
@@ -81,29 +79,24 @@ int queue_push(struct queue *q, int c) {
     if ((q->length + 1) >= q->capacity) {
         int *temp = realloc(q->data, sizeof(int) * ((q->length + 1) * 2));
 
-        if (temp == NULL) {
-            //fprintf(stderr,"Memory Re-allocation failed. Unable to add value to queue.\n");
-            return 0;
-        } else {
-            q->capacity = q->length * 2;
-            q->data = temp;
+        if (temp == NULL) return 0;
 
-            //fprintf(stderr,"Memory successfully re-allocated for push.\n");
-        }
+        q->capacity = q->length * 2;
+        q->data = temp;
     }
 
     // If length of queue is going to exceed capacity, move start queue to position 0.
-    if ((q->length + q->firstInLine) == q->capacity) {
+    if ((q->length + q->first_in_line) == q->capacity) {
         for (size_t i = 0; i < q->length; i++) {
-            q->data[i] = q->data[i + q->firstInLine];
+            q->data[i] = q->data[i + q->first_in_line];
 
-            q->data[i + q->firstInLine] = '\0';
+            q->data[i + q->first_in_line] = '\0';
         }
 
-        q->firstInLine = 0;
+        q->first_in_line = 0;
     }
 
-    q->data[q->length + q->firstInLine] = c;
+    q->data[q->length + q->first_in_line] = c;
 
     q->length++;
     q->pushes++;
@@ -120,20 +113,17 @@ int queue_push(struct queue *q, int c) {
 int queue_pop(struct queue *q) {
     if (q == NULL) return -1;
 
-    if (q->length == 0) {
-        //fprintf(stderr,"Queue is already empty.\n");
-        return -1;
-    } else {
-        int firstCharacter = q->data[q->firstInLine];
+    if (q->length == 0) return -1;
 
-        q->data[q->firstInLine] = '\0';
+    int first_character = q->data[q->first_in_line];
 
-        q->length--;
-        q->pops++;
-        q->firstInLine++;
+    q->data[q->first_in_line] = '\0';
 
-        return firstCharacter;
-    }
+    q->length--;
+    q->pops++;
+    q->first_in_line++;
+
+    return first_character;
 }
 
 /**
@@ -146,7 +136,7 @@ int queue_peek(const struct queue *q) {
     if (q == NULL) return -1;
     if (q->length == 0) return -1;
 
-    return q->data[q->firstInLine];
+    return q->data[q->first_in_line];
 }
 
 /**
