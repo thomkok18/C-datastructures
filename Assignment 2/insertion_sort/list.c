@@ -41,10 +41,7 @@ struct list {
 struct list *list_init(void) {
     struct list *l = malloc(sizeof(struct list));
 
-    if (l == NULL) {
-        //fprintf(stderr,"Not enough space for list.\n");
-        return NULL;
-    }
+    if (l == NULL) return NULL;
 
     l->length = 0;
 
@@ -60,10 +57,7 @@ struct list *list_init(void) {
 struct node *list_new_node(int num) {
     struct node *n = malloc(sizeof(struct node));
 
-    if (n == NULL) {
-        //fprintf(stderr,"Not enough space for node.\n");
-        return NULL;
-    }
+    if (n == NULL) return NULL;
 
     n->list = NULL;
     n->prev = NULL;
