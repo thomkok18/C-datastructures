@@ -222,18 +222,18 @@ int list_unlink_node(struct list *l, struct node *n) {
     if (l == NULL || n == NULL) return 1;
     if (l->length == 0 || l != n->list) return 1;
 
-    struct node *prevNode = n->prev;
-    struct node *nextNode = n->next;
+    struct node *prevnode = n->prev;
+    struct node *nextnode = n->next;
 
-    if (prevNode != NULL && nextNode != NULL) {
-        prevNode->next = n->next;
-        nextNode->prev = n->prev;
-    } else if (prevNode != NULL) {
-        prevNode->next = n->next;
-        l->tail = prevNode;
-    } else if (nextNode != NULL) {
-        nextNode->prev = n->prev;
-        l->head = nextNode;
+    if (prevnode != NULL && nextnode != NULL) {
+        prevnode->next = n->next;
+        nextnode->prev = n->prev;
+    } else if (prevnode != NULL) {
+        prevnode->next = n->next;
+        l->tail = prevnode;
+    } else if (nextnode != NULL) {
+        nextnode->prev = n->prev;
+        l->head = nextnode;
     } else {
         l->head = NULL;
         l->tail = NULL;
@@ -315,12 +315,12 @@ int list_insert_after(struct list *l, struct node *n, struct node *m) {
     if (l == NULL || n == NULL || m == NULL) return 1;
     if (l->length == 0 || l != m->list || l == n->list) return 1;
 
-    struct node *nextNode = m->next;
+    struct node *nextnode = m->next;
 
-    if (nextNode != NULL) {
-        nextNode->prev = n;
+    if (nextnode != NULL) {
+        nextnode->prev = n;
 
-        n->next = nextNode;
+        n->next = nextnode;
         n->prev = m;
 
         m->next = n;
@@ -354,12 +354,12 @@ int list_insert_before(struct list *l, struct node *n, struct node *m) {
     if (l == NULL || n == NULL || m == NULL) return 1;
     if (l->length == 0 || l != m->list || l == n->list) return 1;
 
-    struct node *prevNode = m->prev;
+    struct node *prevnode = m->prev;
 
-    if (prevNode != NULL) {
-        prevNode->next = n;
+    if (prevnode != NULL) {
+        prevnode->next = n;
 
-        n->prev = prevNode;
+        n->prev = prevnode;
         n->next = m;
 
         m->prev = n;
@@ -436,37 +436,37 @@ struct list *list_cut_after(struct list *l, struct node *n) {
 
     nodes[0] = l->head;
 
-    size_t nodePosition;
+    size_t nodeposition;
 
     // Get all nodes from list.
     for (size_t i = 1; i < l->length; i++) {
         nodes[i] = nodes[i - 1]->next;
 
-        if (nodes[i] == n) nodePosition = i + 1;
+        if (nodes[i] == n) nodeposition = i + 1;
     }
 
-    struct list *newList = list_init();
+    struct list *newlist = list_init();
 
-    size_t newListLength = 0;
-    newList->head = n->next;
+    size_t newlistlength = 0;
+    newlist->head = n->next;
 
     l->tail = n;
     n->next = NULL;
 
     // Move nodes from first list to the new list.
-    for (size_t i = nodePosition; i < l->length; i++) {
-        nodes[i]->list = newList;
+    for (size_t i = nodeposition; i < l->length; i++) {
+        nodes[i]->list = newlist;
 
-        newListLength++;
+        newlistlength++;
 
         // Set tail and determine the lengths of both lists.
         if (i == l->length - 1) {
-            newList->tail = nodes[i];
-            newList->length = newListLength;
+            newlist->tail = nodes[i];
+            newlist->length = newlistlength;
 
-            l->length = l->length - newListLength;
+            l->length = l->length - newlistlength;
         }
     }
 
-    return newList;
+    return newlist;
 }
