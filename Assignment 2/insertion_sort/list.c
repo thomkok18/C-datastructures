@@ -394,7 +394,7 @@ size_t list_length(const struct list *l) {
  * @return
  */
 struct node *list_get_ith(const struct list *l, size_t i) {
-    if (l == NULL || i == 0) return NULL;
+    if (l == NULL) return NULL;
 
     if (l->length != 0) {
         struct node *nodes[l->length];
