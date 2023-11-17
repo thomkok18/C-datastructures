@@ -429,7 +429,7 @@ struct list *list_cut_after(struct list *l, struct node *n) {
 
     nodes[0] = l->head;
 
-    size_t node_position;
+    size_t node_position = 0;
 
     // Get all nodes from list.
     for (size_t i = 1; i < l->length; i++) {
