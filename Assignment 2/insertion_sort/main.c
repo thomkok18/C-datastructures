@@ -9,6 +9,19 @@
 
 char buf[BUF_SIZE];
 
+typedef struct node {
+    struct list *list;
+    struct node *next;
+    struct node *prev;
+    int num;
+} node;
+
+typedef struct list {
+    struct node *head;
+    struct node *tail;
+    size_t length;
+} list;
+
 struct config {
     /* You can ignore these options until you implement the
        extra command-line arguments. */
@@ -26,9 +39,23 @@ struct config {
     int zip_alternating;
 };
 
+void insertion_sort(struct list *l, struct config *cfg);
+void ascending_order(struct list *l);
+void descending_order(struct list *l);
+
+/**
+ * Decide which parse option to use based on the chosen option.
+ *
+ * @param cfg config containing the sorting options.
+ * @param argc count.
+ * @param argv array.
+ * @return
+ */
 int parse_options(struct config *cfg, int argc, char *argv[]) {
     memset(cfg, 0, sizeof(struct config));
+
     int c;
+
     while ((c = getopt(argc, argv, "dcoz")) != -1) {
         switch (c) {
         case 'd':
@@ -48,23 +75,119 @@ int parse_options(struct config *cfg, int argc, char *argv[]) {
             return 1;
         }
     }
+
     return 0;
 }
 
+/**
+ * Tries to display values in the correct order based on string containing numbers.
+ *
+ * @param argc count.
+ * @param argv array.
+ * @return
+ */
 int main(int argc, char *argv[]) {
     struct config cfg;
-    if (parse_options(&cfg, argc, argv) != 0) {
-        return 1;
-    }
 
-    /* SOME CODE MISSING HERE */
+    if (parse_options(&cfg, argc, argv) != 0) return 1;
+
+    struct list *l = list_init();
+
+    char *end_ptr;
 
     while (fgets(buf, BUF_SIZE, stdin)) {
+        for (char *ptr = buf; *ptr != '\0';) {
+            int num = (int) strtol(ptr, &end_ptr, 10);
 
-        /* SOME CODE MISSING HERE */
+            // If end_ptr moved to next char, because ptr is a number, add number to list.
+            if (ptr != end_ptr) {
+                struct node *n = list_new_node(num);
+
+                list_add_front(l, n);
+            }
+
+            // Move the pointer to the next character after the number.
+            ptr = end_ptr;
+
+            // Skip whitespaces and new lines.
+            while (*ptr == ' ' || *ptr == '\n') ptr++;
+        }
     }
 
-    /* SOME CODE MISSING HERE */
+    insertion_sort(l, &cfg);
+
+    // Output the sorted list.
+    for (size_t i = 0; i < l->length; i++) {
+        struct node *n = list_get_ith(l, i);
+
+        fprintf(stdout, "%d\n", n->num);
+    }
+
+    list_cleanup(l);
 
     return 0;
+}
+
+/**
+ * Sort list based on config.
+ *
+ * @param l the list.
+ * @param cfg
+ */
+void insertion_sort(struct list *l, struct config *cfg) {
+    if (l == NULL || cfg == NULL) return;
+
+    if (cfg->descending_order) {
+        descending_order(l);
+    } else {
+        ascending_order(l);
+    }
+}
+
+/**
+ * Order list in ascending order.
+ *
+ * @param l the list with nodes containing numbers.
+ */
+void ascending_order(struct list *l) {
+    for (size_t l_i = 0; l_i < l->length; l_i++) {
+        struct node *n = list_get_ith(l, l_i);
+
+        if (n == NULL) break;
+
+        for (size_t n_i = l_i; n_i--;) {
+            if (n->prev == NULL) continue;
+
+            struct node *prev_n = list_get_ith(l, n_i);
+
+            if (n->num < prev_n->num) {
+                list_unlink_node(l, n);
+                list_insert_before(l, n, prev_n);
+            }
+        }
+    }
+}
+
+/**
+ * Order list in descending order.
+ *
+ * @param l the list with nodes containing numbers.
+ */
+void descending_order(struct list *l) {
+    for (size_t l_i = 0; l_i < l->length; l_i++) {
+        struct node *n = list_get_ith(l, l_i);
+
+        if (n == NULL) break;
+
+        for (size_t n_i = l_i; n_i--;) {
+            if (n->prev == NULL) continue;
+
+            struct node *prev_n = list_get_ith(l, n_i);
+
+            if (n->num > prev_n->num) {
+                list_unlink_node(l, n);
+                list_insert_before(l, n, prev_n);
+            }
+        }
+    }
 }
