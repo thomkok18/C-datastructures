@@ -42,6 +42,9 @@ struct config {
 void insertion_sort(struct list *l, struct config *cfg);
 void ascending_order(struct list *l);
 void descending_order(struct list *l);
+void pair_wise_order(struct list *l);
+void remove_odd(struct list *l);
+void zip_alternating_order(struct list *l);
 
 /**
  * Decide which parse option to use based on the chosen option.
@@ -142,6 +145,18 @@ void insertion_sort(struct list *l, struct config *cfg) {
     } else {
         ascending_order(l);
     }
+
+    if (cfg->combine) {
+        pair_wise_order(l);
+    }
+
+    if (cfg->remove_odd) {
+        remove_odd(l);
+    }
+
+    if (cfg->zip_alternating) {
+        zip_alternating_order(l);
+    }
 }
 
 /**
@@ -190,4 +205,31 @@ void descending_order(struct list *l) {
             }
         }
     }
+}
+
+/**
+ * Order list pair-wise.
+ *
+ * @param l the list with nodes containing numbers.
+ */
+void pair_wise_order(struct list *l) {
+    fprintf(stderr, "\n%p\n", (void *) l);
+}
+
+/**
+ * Remove odd numbers from list.
+ *
+ * @param l the list with nodes containing numbers.
+ */
+void remove_odd(struct list *l) {
+    fprintf(stderr, "\n%p\n", (void *) l);
+}
+
+/**
+ * Split list into two and alternating between each number from both lists.
+ *
+ * @param l the list with nodes containing numbers.
+ */
+void zip_alternating_order(struct list *l) {
+    fprintf(stderr, "\n%p\n", (void *) l);
 }
