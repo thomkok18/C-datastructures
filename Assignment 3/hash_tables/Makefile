@@ -27,6 +27,7 @@ define CFLAGS
 -Wcast-qual \
 -Wenum-compare \
 -Wsizeof-pointer-memaccess \
+`pkg-config --cflags check` \
 -Wstrict-prototypes
 endef
 
