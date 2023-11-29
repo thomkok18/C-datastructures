@@ -94,7 +94,7 @@ static struct table *create_from_file(
 
     size_t line_number = 1;
 
-    // Calculate the delimiter string and free it later
+    // Calculate the delimiter string.
     char *delimiter = calc_delim();
 
     while (fgets(line, LINE_LENGTH, fp)) {
@@ -105,6 +105,7 @@ static struct table *create_from_file(
             line[len - 1] = '\0';
         }
 
+        // Modify string to clean it up.
         cleanup_string(line);
 
         char *word = strtok(line, delimiter);
