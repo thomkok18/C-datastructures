@@ -1,3 +1,23 @@
+/*H**********************************************************************
+* FILENAME: array.c
+*
+* DESCRIPTION:
+*   Array datastructure.
+*
+* PUBLIC FUNCTIONS:
+*   struct array *array_init( initial_capacity )
+*   void array_cleanup( array )
+*   int *array_get( array, index )
+*   int array_append( array, element )
+*   unsigned long array_size( array )
+*
+* AUTHOR: Thom Kok (Student nr: 15316491)
+*
+* START DATE: 20-11-2023
+*
+*H*/
+
+#include <stdio.h>
 #include <stdlib.h>
 
 #include "array.h"
