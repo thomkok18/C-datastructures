@@ -248,14 +248,22 @@ double table_load_factor(const struct table *t) {
 int table_delete(struct table *t, const char *key) {
     if (t == NULL || strlen(key) == 0) return -1;
 
-    unsigned long index = t->hash_func((unsigned char *) key) % t->capacity;
+    // Allocate memory for n->key.
+    char *str = malloc(strlen(key) + 1);
+
+    if (str == NULL) return 1;
+
+    // Copy the key into allocated memory.
+    strcpy(str, key);
+
+    unsigned long index = t->hash_func((unsigned char *) str) % t->capacity;
 
     struct node *current = t->node_array[index];
 
     struct node *prev = NULL;
 
     while (current != NULL) {
-        if (current->key != NULL && strcmp(current->key, key) == 0) {
+        if (current->key != NULL && strcmp(current->key, str) == 0) {
             // If key is found at first node or in the node chain.
             if (prev == NULL) {
                 t->node_array[index] = current->next;
@@ -266,6 +274,7 @@ int table_delete(struct table *t, const char *key) {
             free(current->key);
             array_cleanup(current->array);
             free(current);
+            free(str);
 
             t->load--;
 
