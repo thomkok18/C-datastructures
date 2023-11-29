@@ -5,7 +5,7 @@
 *   Hash table datastructure.
 *
 * PUBLIC FUNCTIONS:
-*   struct table *table_init( capacity, max_load_factor, (*hash_func)() )
+*   struct table *table_init( capacity, max_load_factor, (*hash_func)(*) )
 *   int table_insert( table, key, value )
 *   struct array *table_lookup( table, key )
 *   double table_load_factor( table )

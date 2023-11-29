@@ -1,3 +1,25 @@
+/*H**********************************************************************
+* FILENAME: main.c
+*
+* DESCRIPTION:
+*   Using the hash table datastructure to save and find words in a txt document.
+*
+* PUBLIC FUNCTIONS:
+*   int main( argc, argv[] )
+*
+* PRIVATE FUNCTIONS:
+*   static void cleanup_string( line )
+*   static char *calc_delim( void )
+*   static struct table *create_from_file( filename, start_size, max_load, (*hash_func)(*) )
+*   static int stdin_lookup( hash_table )
+*   static void timed_construction( filename )
+*
+* AUTHOR: Thom Kok (Student nr: 15316491)
+*
+* START DATE: 20-11-2023
+*
+*H*/
+
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
