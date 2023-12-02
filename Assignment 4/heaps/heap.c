@@ -191,23 +191,29 @@ static void *heap_pop(struct heap *h) {
     // Pop the last element (which was the root).
     void *popped = array_pop(h->array);
 
-    // Perform heapify-down to maintain the heap property.
     long int current_index = 0;
 
+    // Perform heapify-down to maintain the heap property.
     while (1) {
         long int smallest = current_index;
         long int left_child_index = 2 * (int) current_index + 1;
         long int right_child_index = 2 * (int) current_index + 2;
 
+        void *current = NULL;
+        void *left_child = array_get(h->array, left_child_index);
+        void *right_child = array_get(h->array, right_child_index);
+
+        current = array_get(h->array, smallest);
+
         // Check if the left child is smaller than the current smallest.
-        if (left_child_index < array_size(h->array) &&
-            h->compare(array_get(h->array, left_child_index), array_get(h->array, smallest)) < 0) {
+        if (left_child_index < array_size(h->array) && h->compare(left_child, current) < 0) {
             smallest = left_child_index;
         }
 
+        current = array_get(h->array, smallest);
+
         // Check if the right child is smaller than the current smallest.
-        if (right_child_index < array_size(h->array) &&
-            h->compare(array_get(h->array, right_child_index), array_get(h->array, smallest)) < 0) {
+        if (right_child_index < array_size(h->array) && h->compare(right_child, current) < 0) {
             smallest = right_child_index;
         }
 
