@@ -126,7 +126,7 @@ static void array_swap(struct array *a, int i_1, int i_2) {
 }
 
 /**
- * Inserts patient in the heap.
+ * Insert patient in the heap and bubble it up when you insert it at the bottom of the heap.
  *
  * @param h the heap.
  * @param p the patient.
@@ -177,7 +177,7 @@ int prioq_insert(prioq *q, void *p) {
 }
 
 /**
- * Remove one heap from the priority queue.
+ * Remove one heap from the priority queue and sink it down when you pop the root of the heap.
  *
  * @param h the heap.
  * @return
@@ -208,9 +208,8 @@ static void *heap_pop(struct heap *h) {
         // Check if the left child is smaller than the current smallest.
         if (left_child_index < array_size(h->array) && h->compare(left_child, current) < 0) {
             smallest = left_child_index;
+            current = array_get(h->array, smallest);
         }
-
-        current = array_get(h->array, smallest);
 
         // Check if the right child is smaller than the current smallest.
         if (right_child_index < array_size(h->array) && h->compare(right_child, current) < 0) {
