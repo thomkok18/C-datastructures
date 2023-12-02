@@ -7,7 +7,7 @@ struct array;
 
 /* Return a pointer to an empty dynamic array with 'initial capacity'
  * of storage allocated.
- * Return NULL if an error occured. */
+ * Return NULL if an error occurred. */
 struct array *array_init(long initial_capacity);
 
 /* Free all elements stored in the array 'a' using the 'free_func()'
@@ -31,7 +31,7 @@ int array_append(struct array *a, void *p);
 void *array_pop(struct array *a);
 
 /* Return the size of array 'a'.
- * Return -1 if an error occured. */
+ * Return -1 if an error occurred. */
 long int array_size(const struct array *a);
 
 #endif
