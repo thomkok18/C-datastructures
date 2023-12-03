@@ -199,11 +199,9 @@ static void *heap_pop(struct heap *h) {
         long int left_child_index = 2 * (int) current_index + 1;
         long int right_child_index = 2 * (int) current_index + 2;
 
-        void *current = NULL;
+        void *current = array_get(h->array, smallest);
         void *left_child = array_get(h->array, left_child_index);
         void *right_child = array_get(h->array, right_child_index);
-
-        current = array_get(h->array, smallest);
 
         // Check if the left child is smaller than the current smallest.
         if (left_child_index < array_size(h->array) && h->compare(left_child, current) < 0) {
