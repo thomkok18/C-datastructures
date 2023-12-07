@@ -136,7 +136,7 @@ static int heap_insert(struct heap *h, void *p) {
     if (h == NULL) return 1;
 
     // Add patient before sorting.
-    array_append(h->array, p);
+    if (array_append(h->array, p) != 0) return 1;
 
     // Get the index of the last element.
     long int current_index = array_size(h->array) - 1;

@@ -11,6 +11,8 @@
 *   static int parse_options( cfg, argc, argv[] )
 *   static int compare_patient_name( a, b )
 *   static int compare_patient_age( a, b )
+*   static void cleanup_patient( p )
+*   static int add_patient( queue, token )
 *
 * AUTHOR: Thom Kok (Student nr: 15316491)
 *
@@ -43,7 +45,8 @@ static int parse_options(struct config *cfg, int argc, char *argv[]);
 
 typedef struct {
     char *name;
-    /* ... CODE MISSING HERE .... */
+    char *age;
+    char *duration;
 } patient_t;
 
 /**
@@ -65,12 +68,99 @@ static int compare_patient_name(const void *a, const void *b) {
  * @return
  */
 static int compare_patient_age(const void *a, const void *b) {
-    /* ... CODE MISSING HERE .... */
+    const patient_t *patient_a = (const patient_t *)a;
+    const patient_t *patient_b = (const patient_t *)b;
+
+    // Convert age strings to integers.
+    long int age_a = strtol(patient_a->age, NULL, 10);
+    long int age_b = strtol(patient_b->age, NULL, 10);
+
+    if (age_a < age_b) {
+        return -1;
+    } else if (age_a > age_b) {
+        return 1;
+    }
+
+    // Ages are equal, compare names alphabetically.
+    return compare_patient_name(a, b);
+}
+
+/**
+ * Cleanup the patient.
+ *
+ * @param p the patient.
+ */
+static void cleanup_patient(patient_t *p) {
+    free(p->name);
+    free(p->age);
+    free(p->duration);
+    free(p);
+}
+
+/**
+ * Add the patient to the priority queue.
+ *
+ * @param queue the priority queue.
+ * @param token a token of the full string (containing patient name).
+ * @return
+ */
+static int add_patient(prioq *queue, char *token) {
+    if (queue == NULL || token == NULL) return 1;
+
+    patient_t *new_patient = malloc(sizeof(patient_t));
+
+    if (new_patient == NULL) return 1;
+
+    new_patient->name = NULL;
+    new_patient->age = NULL;
+    new_patient->duration = NULL;
+
+    new_patient->name = malloc(strlen(token) + 1);
+
+    if (new_patient->name != NULL) strcpy(new_patient->name, token);
+
+    if (new_patient->name == NULL) {
+        free(new_patient);
+
+        return 1;
+    }
+
+    // Extract age.
+    token = strtok(NULL, " ");
+
+    if (token != NULL) {
+        new_patient->age = malloc(strlen(token) + 1);
+
+        if (new_patient->age != NULL) strcpy(new_patient->age, token);
+    }
+
+    // Extract duration.
+    token = strtok(NULL, " ");
+
+    if (token != NULL) {
+        new_patient->duration = malloc(strlen(token) + 1);
+
+        if (new_patient->duration != NULL) strcpy(new_patient->duration, token);
+    }
+
+    // Insert into the priority queue.
+    if (prioq_insert(queue, new_patient) != 0) {
+        cleanup_patient(new_patient);
+
+        return 1;
+    }
+
     return 0;
 }
 
+/**
+ * Print patient queues.
+ *
+ * @param argc count.
+ * @param argv array.
+ * @return
+ */
 int main(int argc, char *argv[]) {
-    char *token, *name_cpy;
     prioq *queue;
     struct config cfg;
 
@@ -82,10 +172,11 @@ int main(int argc, char *argv[]) {
         queue = prioq_init(&compare_patient_name);
     }
 
-    // TODO: Clean priority queue later.
-    prioq_cleanup(queue, NULL);
+    if (queue == NULL) {
+        fprintf(stderr, "Failed to initialize priority queue.\n");
 
-    /* ... CODE MISSING HERE .... */
+        return EXIT_FAILURE;
+    }
 
     for (int iterations = 0;;) {
         while (1) {
@@ -93,28 +184,64 @@ int main(int argc, char *argv[]) {
 
             if (s == NULL) {
                 fprintf(stderr, "Unexpected end of file. exiting\n");
-                /* ... CODE MISSING HERE .... */
+
+                prioq_cleanup(queue, NULL);
+
                 return EXIT_FAILURE;
             }
 
-            /* ... CODE MISSING HERE .... */
+            if (s[0] == '.') break;
+
+            // Get token of string and start with name.
+            char *patient_name = strtok(buf, " ");
+            add_patient(queue, patient_name);
         }
 
-        printf(".\n"); /* End turn. */
+        patient_t *patient = prioq_pop(queue);
 
+        if (patient) {
+            if (patient->duration != NULL) {
+                for (int i = 1; i < strtol(patient->duration, NULL, 10); i++) {
+                    printf(".\n");
+                }
+            }
+
+            if (patient->name != NULL) printf("%s\n", patient->name);
+
+            printf(".\n"); // Patient is done at the doctor.
+
+            cleanup_patient(patient);
+        } else {
+            printf(".\n"); // Doctor has no patient.
+        }
+
+        // Show patients not treated after waiting in queue and clean the queue.
         if (++iterations == 10) {
+            while (prioq_size(queue) > 0) {
+                patient_t *p = prioq_pop(queue);
 
-            /* ... CODE MISSING HERE .... */
+                if (p->name != NULL) printf("%s\n", p->name);
+
+                cleanup_patient(p);
+            }
+
+            prioq_cleanup(queue, NULL);
 
             break;
         }
     }
 
-    /* ... CODE MISSING HERE .... */
-
     return EXIT_SUCCESS;
 }
 
+/**
+ * Parse the options given.
+ *
+ * @param cfg the config.
+ * @param argc count.
+ * @param argv array.
+ * @return
+ */
 int parse_options(struct config *cfg, int argc, char *argv[]) {
     memset(cfg, 0, sizeof(struct config));
 
