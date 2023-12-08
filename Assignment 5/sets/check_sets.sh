@@ -12,5 +12,5 @@ do
     input=${refout%%.ref}.txt 
     echo $input
     $PROG < $input | diff - $refout
-    if [[ ${PIPESTATUS[0]} != 0 ]]; then echo "FAILED"; exit 1; fi
+    if [[ $? != 0 || ${PIPESTATUS[0]} != 0 ]]; then echo "FAILED"; exit 1; fi
 done
