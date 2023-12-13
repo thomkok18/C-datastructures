@@ -1,3 +1,19 @@
+/*H**********************************************************************
+* FILENAME: main.c
+*
+* DESCRIPTION:
+*   Set manipulation program based on operands.
+*
+* PUBLIC FUNCTIONS:
+*   void cleanup_and_fail( buf, s )
+*   int main( void )
+*
+* AUTHOR: Thom Kok (Student nr: 15316491)
+*
+* START DATE: 08-12-2023
+*
+*H*/
+
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -8,19 +24,21 @@
 #define BUF_SIZE 256
 
 void cleanup_and_fail(char *buf, struct set *s) {
-    if (s) {
-        set_cleanup(s);
-    }
+    if (s) set_cleanup(s);
+
     free(buf);
+
     exit(EXIT_FAILURE);
 }
 
 int main(void) {
     char *buf = malloc(BUF_SIZE);
+
     if (!buf) {
         perror("Could not allocate input buffer");
         return EXIT_FAILURE;
     }
+
     struct set *s = set_init(0);   /* initialize set with turbo turned off. */
 
     /* ... SOME CODE MISSING HERE ... */
@@ -32,18 +50,23 @@ int main(void) {
         int num;
 
         command = strtok(buf, " ");     /* get command: +,-,?,p */
+
         if (strchr("+-?", *command)) {  /* operation with operand */
             num_str = strtok(NULL, "\n");
+
             if (!num_str) {
                 printf("set operation '%c' requires integer operand\n", *command);
                 cleanup_and_fail(buf, s);
             }
+
             num = (int) strtol(num_str, &endptr, 10);
+
             if (*endptr != '\0') {
                 printf("error converting '%s' to an integer\n", num_str);
                 cleanup_and_fail(buf, s);
             }
         }
+
         switch (*command) {
             /* ... SOME CODE MISSING HERE ... */
         }
@@ -52,7 +75,9 @@ int main(void) {
     if (set_verify(s)) { /* debug function */
         fprintf(stderr, "Set implementation failed verification!\n");
     }
+
     free(buf);
     set_cleanup(s);
+
     return EXIT_SUCCESS;
 }

@@ -76,7 +76,7 @@ START_TEST(test_remove) {
 }
 END_TEST
 
-/* test remove elment not in tree */
+/* test remove element not in tree */
 START_TEST(test_remove_not_found) {
     struct tree *t = tree_init(0);
     ck_assert_ptr_nonnull(t);

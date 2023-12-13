@@ -31,10 +31,10 @@ void tree_print(const struct tree *tree);
 /* Free all memory associated with the tree. */
 void tree_cleanup(struct tree *tree);
 
-/* Check properties of the BST and balacing properties if turbo is
+/* Check properties of the BST and balancing properties if turbo is
  * set. Return 0 if the checks pass, return an error code  otherwise.
  *
- * This function is optional can be implemented to  for debugging.
+ * This function is optional can be implemented to for debugging.
  * It should only print to stderr, not to stdout. */
 int tree_check(const struct tree *tree);
 
