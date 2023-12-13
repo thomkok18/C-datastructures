@@ -2,7 +2,7 @@
 * FILENAME: main.c
 *
 * DESCRIPTION:
-*   Set manipulation program based on operands.
+*   Set manipulation program based on operands to manipulate a tree.
 *
 * PUBLIC FUNCTIONS:
 *   void cleanup_and_fail( buf, s )
