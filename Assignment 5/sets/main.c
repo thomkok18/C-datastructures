@@ -6,6 +6,7 @@
 *
 * PUBLIC FUNCTIONS:
 *   void cleanup_and_fail( buf, s )
+*   void execute_command( buf, s, num, command )
 *   int main( void )
 *
 * AUTHOR: Thom Kok (Student nr: 15316491)
@@ -23,6 +24,12 @@
 
 #define BUF_SIZE 256
 
+/**
+ * Clean up set or return failure.
+ *
+ * @param buf the buffer.
+ * @param s the set.
+ */
 void cleanup_and_fail(char *buf, struct set *s) {
     if (s) set_cleanup(s);
 
@@ -31,6 +38,44 @@ void cleanup_and_fail(char *buf, struct set *s) {
     exit(EXIT_FAILURE);
 }
 
+/**
+ * Executing the commands.
+ *
+ * @param buf the buffer.
+ * @param s the set.
+ * @param num the number from the file.
+ * @param command the command value.
+ */
+void execute_command(char *buf, struct set *s, int num, char *command) {
+    switch (*command) {
+        case '+':
+            set_insert(s, num);
+            break;
+        case '-':
+            set_remove(s, num);
+            break;
+        case '?':
+            if (set_find(s, num)) {
+                printf("found: %d\n", num);
+            } else {
+                printf("not found: %d\n", num);
+            }
+
+            break;
+        case 'p':
+            set_print(s);
+            break;
+        default:
+            printf("Unknown command: %s\n", command);
+            cleanup_and_fail(buf, s);
+    }
+}
+
+/**
+ * Try changing the tree, based on txt files.
+ *
+ * @return
+ */
 int main(void) {
     char *buf = malloc(BUF_SIZE);
 
@@ -47,7 +92,7 @@ int main(void) {
         char *endptr;
         char *command;
         char *num_str;
-        int num;
+        int num = 0;
 
         command = strtok(buf, " ");     /* get command: +,-,?,p */
 
@@ -67,28 +112,7 @@ int main(void) {
             }
         }
 
-        switch (*command) {
-            case '+':
-                set_insert(s, num);
-                break;
-            case '-':
-                set_remove(s, num);
-                break;
-            case '?':
-                if (set_find(s, num)) {
-                    printf("found: %d\n", num);
-                } else {
-                    printf("not found: %d\n", num);
-                }
-
-                break;
-            case 'p':
-                set_print(s);
-                break;
-            default:
-                printf("Unknown command: %s\n", command);
-                cleanup_and_fail(buf, s);
-        }
+        execute_command(buf, s, num, command);
     }
 
     if (set_verify(s)) { /* debug function */
