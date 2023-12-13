@@ -115,7 +115,7 @@ int set_remove(struct set *s, int num) {
  * @param s the set.
  */
 void set_cleanup(struct set *s) {
-    if (s != NULL) return;
+    if (s == NULL) return;
 
     if (s->tree != NULL) tree_cleanup(s->tree);
 
