@@ -41,7 +41,7 @@ int main(void) {
 
     struct set *s = set_init(0);   /* initialize set with turbo turned off. */
 
-    /* ... SOME CODE MISSING HERE ... */
+    if (s == NULL) return EXIT_FAILURE;
 
     while (fgets(buf, BUF_SIZE, stdin)) {
         char *endptr;
@@ -68,7 +68,26 @@ int main(void) {
         }
 
         switch (*command) {
-            /* ... SOME CODE MISSING HERE ... */
+            case '+':
+                set_insert(s, num);
+                break;
+            case '-':
+                set_remove(s, num);
+                break;
+            case '?':
+                if (set_find(s, num)) {
+                    printf("found: %d\n", num);
+                } else {
+                    printf("not found: %d\n", num);
+                }
+
+                break;
+            case 'p':
+                set_print(s);
+                break;
+            default:
+                printf("Unknown command: %s\n", command);
+                cleanup_and_fail(buf, s);
         }
     }
 

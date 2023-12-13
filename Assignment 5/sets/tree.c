@@ -17,7 +17,7 @@
 * PRIVATE FUNCTIONS:
 *   static node *make_node( .. )
 *   static int print_tree_dot_r( root, dotf )
-*   static void tree_print_in_order( root )
+*   static void tree_print_in_order( tree, root )
 *   static void nodes_cleanup( n )
 *
 * AUTHOR: Thom Kok (Student nr: 15316491)
@@ -36,6 +36,7 @@
  * So you can change or remove these structs to suit your needs. */
 struct tree {
     struct node *root;
+    size_t height;
 };
 
 struct node {
@@ -143,6 +144,7 @@ struct tree *tree_init(int turbo) {
     if (t == NULL) return NULL;
 
     t->root = NULL;
+    t->height = 0;
 
     return t;
 }
@@ -187,6 +189,8 @@ int tree_insert(struct tree *tree, int data) {
             }
         }
     }
+
+    tree->height++;
 
     return 0;
 }
@@ -301,19 +305,28 @@ int tree_remove(struct tree *tree, int data) {
         }
     }
 
+    tree->height--;
+
     return 0;
 }
 
 /**
  * Print the contents of the tree in sorted order in one line per item.
  *
- * @param tree the tree.
+ * @param tree the tree height.
+ * @param root the root of the tree.
  */
-static void tree_print_in_order(const struct node *root) {
+static void tree_print_in_order(size_t height, struct node *root) {
     if (root != NULL) {
-        tree_print_in_order(root->lhs);
-        fprintf(stdout, "%d ", root->data);
-        tree_print_in_order(root->rhs);
+        tree_print_in_order(height, root->lhs);
+
+        printf("%d", root->data);
+
+        if (height != 0) {
+            printf( "\n");
+        }
+
+        tree_print_in_order(height, root->rhs);
     }
 }
 
@@ -323,21 +336,10 @@ static void tree_print_in_order(const struct node *root) {
  * @param tree the tree.
  */
 void tree_print(const struct tree *tree) {
-    if (tree == NULL) {
-        fprintf(stdout,"Tree does not exist.\n");
-        return;
-    }
+    if (tree == NULL) return;
+    if (tree->root == NULL) return;
 
-    if (tree->root == NULL) {
-        fprintf(stdout,"Tree is empty.\n");
-        return;
-    }
-
-    fprintf(stdout, "Tree contents in sorted order: ");
-
-    tree_print_in_order(tree->root);
-
-    fprintf(stdout, "\n");
+    tree_print_in_order(tree->height, tree->root);
 }
 
 /**

@@ -28,8 +28,6 @@
 
 struct set {
     struct tree *tree;
-    size_t size;
-    size_t capacity;
     int turbo;
 };
 
@@ -45,8 +43,6 @@ struct set *set_init(int turbo) {
     if (s == NULL) return NULL;
 
     s->tree = NULL;
-    s->size = 0;
-    s->capacity = 0;
     s->turbo = turbo;
 
     return s;
@@ -69,7 +65,6 @@ int set_insert(struct set *s, int num) {
     }
 
     if (tree_insert(s->tree, num) == 0) {
-        s->size++;
         return 0;
     } else {
         return 1;
@@ -102,7 +97,6 @@ int set_remove(struct set *s, int num) {
     if (s->tree == NULL) return 1;
 
     if (tree_remove(s->tree, num) == 0) {
-        s->size--;
         return 0;
     } else {
         return 1;
