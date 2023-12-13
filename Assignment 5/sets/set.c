@@ -123,8 +123,11 @@ void set_cleanup(struct set *s) {
  */
 void set_print(const struct set *s) {
     if (s == NULL) return;
+    if (s->tree == NULL) return;
 
     tree_print(s->tree);
+
+//    tree_dot(s->tree, "Tree.pdf");
 }
 
 /**

@@ -101,6 +101,8 @@ static int print_tree_dot_r(node *root, FILE *dotf) {
  * @param filename the file.
  */
 void tree_dot(const struct tree *tree, const char *filename) {
+    if (tree->root == NULL) return;
+
     node *root = tree->root;
     global_node_counter = 0;
     FILE *dotf = fopen(filename, "w");
@@ -112,9 +114,7 @@ void tree_dot(const struct tree *tree, const char *filename) {
 
     fprintf(dotf, "digraph {\n");
 
-    if (root) {
-        print_tree_dot_r(root, dotf);
-    }
+    if (root) print_tree_dot_r(root, dotf);
 
     fprintf(dotf, "}\n");
 
