@@ -1,24 +1,40 @@
+/*H**********************************************************************
+* FILENAME: list.c
+*
+* DESCRIPTION:
+*   List datastructure.
+*
+* PUBLIC FUNCTIONS:
+*   struct list *list_init(void)
+*   struct node *list_new_node( num )
+*   struct node *list_head( l )
+*   struct node *list_next( n )
+*   int list_add_front( l, n )
+*   struct node *list_tail( l )
+*   struct node *list_prev( l, n )
+*   int list_add_back( l, n )
+*   int list_node_get_value( n )
+*   int list_node_set_value( n, value )
+*   int list_unlink_node( l, n )
+*   void list_free_node( n )
+*   int list_cleanup( l )
+*   int list_node_present( l, n )
+*   int list_insert_after( l, n, m )
+*   int list_insert_before( l, n, m )
+*   size_t list_length( l )
+*   struct node *list_get_ith( l, i )
+*   struct list *list_cut_after( l, n )
+*
+* AUTHOR: Thom Kok (Student nr: 15316491)
+*
+* START DATE: 09-11-2023
+*
+*H*/
+
 #include <stdio.h>
 #include <stdlib.h>
 
 #include "list.h"
-
-/*
- * TODO: A lot of code missing here. You will need to add implementations for
- * all the functions described in list.h here.
- *
- * Start by adding the definitions for the list and node structs. You may
- * implement any of the Linked List versions discussed in the lecture, which
- * have some different trade-offs for the functions you will need to write.
- *
- * Note: The function prototypes in list.h assume the most basic Singly Linked
- * List. If you implement some other version, you may not need all of the function
- * arguments for all of the described functions. This will produce a warning,
- * which you can suppress by adding a simple if-statement to check the value
- * of the unused parameter.
- *
- * Also, do not forget to add any required includes at the top of your file.
- */
 
 struct node {
     struct list *list;
