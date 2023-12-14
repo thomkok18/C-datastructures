@@ -1,3 +1,25 @@
+/*H**********************************************************************
+* FILENAME: stack.c
+*
+* DESCRIPTION:
+*   Stack datastructure.
+*
+* PUBLIC FUNCTIONS:
+*   struct stack *stack_init( capacity )
+*   void stack_cleanup( s )
+*   void stack_stats( s )
+*   int stack_push( s, c )
+*   int stack_pop( s )
+*   int stack_peek( s )
+*   int stack_empty( s )
+*   size_t stack_size( s )
+*
+* AUTHOR: Thom Kok (Student nr: 15316491)
+*
+* START DATE: 30-10-2023
+*
+*H*/
+
 #include <stdio.h>
 #include <stdlib.h>
 

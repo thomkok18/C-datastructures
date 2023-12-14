@@ -1,3 +1,19 @@
+/*H**********************************************************************
+* FILENAME: maze_solver_bfs.c
+*
+* DESCRIPTION:
+*   Solving a maze using the breadth-first search algorithm.
+*
+* PUBLIC FUNCTIONS:
+*   int bfs_solve( m )
+*   int main(void)
+*
+* AUTHOR: Thom Kok (Student nr: 15316491)
+*
+* START DATE: 30-10-2023
+*
+*H*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>

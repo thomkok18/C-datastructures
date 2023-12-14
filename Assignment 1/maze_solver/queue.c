@@ -1,3 +1,25 @@
+/*H**********************************************************************
+* FILENAME: queue.c
+*
+* DESCRIPTION:
+*   Queue datastructure.
+*
+* PUBLIC FUNCTIONS:
+*   struct queue *queue_init( capacity )
+*   void queue_cleanup( q )
+*   void queue_stats( q )
+*   int queue_push( q, c )
+*   int queue_pop( q )
+*   int queue_peek( q )
+*   int queue_empty( q )
+*   size_t queue_size( q )
+*
+* AUTHOR: Thom Kok (Student nr: 15316491)
+*
+* START DATE: 30-10-2023
+*
+*H*/
+
 #include <stdio.h>
 #include <stdlib.h>
 
