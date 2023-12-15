@@ -2,7 +2,7 @@
 * FILENAME: tree.c
 *
 * DESCRIPTION:
-*   Tree datastructure.
+*   Binary search tree datastructure.
 *
 * PUBLIC FUNCTIONS:
 *   void tree_dot( tree, filename )
